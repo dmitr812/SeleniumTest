@@ -1,4 +1,4 @@
-package web_pages;
+package web_pages; 
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -6,7 +6,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 
 public class SearchPage extends BasePage		// класс объектов web-страниц
 {
@@ -30,53 +29,41 @@ public class SearchPage extends BasePage		// класс объектов web-с�
 		driver_ = super.driver; 		// обращаемся к driver из суперкласса
 	}
 
-	private void setCheckbox(By checkbox) 				// метод 
+	private void inputParam(By link, String str) 		// метод: вводит значение в поле ввода 
 	{
-		WebDriverWait wait = new WebDriverWait(driver_, 5);	// инициализация ожидания драйвера
-		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(checkbox)); // ожидание элемента
-		//element.click();						// клик по найденному чек-боксу
-		JavascriptExecutor executor = (JavascriptExecutor) driver_;
+		WebDriverWait wait = new WebDriverWait(driver_, 10);// инициализация ожидания драйвера
+															// ожидание элемента
+		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(link));							
+		element.sendKeys(str);								// ввод значения в поле 
+	}
+			
+	private void setCheckbox(By checkbox) 				// метод: отмечает чек-бокс 
+	{
+		WebDriverWait wait = new WebDriverWait(driver_, 10);// инициализация ожидания драйвера
+															// ожидание элемента
+		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(checkbox));		
+		JavascriptExecutor executor = (JavascriptExecutor) driver_;	// клик по чек-боксу
 		executor.executeScript("arguments[0].click();", element);	
+															// ожидание refreshed-элемента
+		wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeSelected(checkbox)));
 	}
-		
-	private void enterParam(By link, String str) 		// метод 
+			
+	public void Searching1()		// метод: настройка поиска для TestCase #1
 	{
-		WebDriverWait wait = new WebDriverWait(driver_, 5);	// инициализация ожидания драйвера
-		WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(link)); // ожидание элемента
-		element.sendKeys(str);								// ввод строки в поле 
-	}
-	
-	private void delay()
-	{
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} 
-	}
-	
-	public void Searching1()		// метод: поиск для TestCase #1
-	{
-		enterParam(priceTo, price1);	// ввод данных в поле параметра (цена до) 
+		inputParam(priceTo, price1);	// ввод данных в поле параметра (цена до) 
 		setCheckbox(hpCheckbox);		// клик по чек-боксу 
 		setCheckbox(lenovoCheckbox);	// клик по чек-боксу
-		clickLink(ApplyBtn);			// переход по клику по кнопке
-		delay();		
+		clickLink_(ApplyBtn);			// переход по клику по кнопке
 	}
 	
-	public void Searching2()		// метод: поиск для TestCase #2
+	public void Searching2()		// метод: настройка поиска для TestCase #2
 	{
-		enterParam(priceFrom, price2);	// ввод данных в поле параметра (цена от) 
-		enterParam(priceTo, price3);	// ввод данных в поле параметра (цена до)
-		
+		inputParam(priceFrom, price2);	// ввод данных в поле параметра (цена от) 
+		inputParam(priceTo, price3);	// ввод данных в поле параметра (цена до)
 		setCheckbox(acerCheckbox);		// клик по чек-боксу 
 		if (!driver.findElement(dellCheckbox).isDisplayed())
-		{
-			clickLink(MoreBtn);			// переход по клику по ссылке
-			System.out.println("click <Еще>");
-		}
+			clickLink_(MoreBtn);		// переход по клику по кнопке
 		setCheckbox(dellCheckbox);		// клик по чек-боксу
-		clickLink(ApplyBtn);			// переход по клику по кнопке
-		delay();
+		clickLink_(ApplyBtn);			// переход по клику по кнопке
 	}
 }
